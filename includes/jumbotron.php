@@ -24,20 +24,7 @@ function ss_jumbotron_post_type() {
  * @param  array $meta_boxes
  * @return array
  */
-function ss_jumbotron_metabox( array $meta_boxes ) {
-
-	// Start with an underscore to hide fields from custom fields list
-	$prefix = '_ss_';
-
-	// Get an array of the available post types
-	$post_types = get_post_types( array( 'public' => true ), 'objects' );
-
-	$pt_array = array();
-	foreach ( $post_types as $post_type ) {
-		if ( 'ss_jumbotron' != $post_type->name ) {
-			$pt_array[] = $post_type->name;
-		}
-	}
+function ss_jumbotron_metabox( $fields ) {
 
 	// Get the list of jumbotron posts.
 	$args = array(
@@ -57,27 +44,17 @@ function ss_jumbotron_metabox( array $meta_boxes ) {
 		$jumbos_array[$jumbotron->ID] = get_the_title( $jumbotron->ID );
 	}
 
-	$meta_boxes[] = array(
-		'id'         => 'ss_jumbotron_metabox',
-		'title'      => 'Assign a Jumbotron',
-		'pages'      => $pt_array,
-		'context'    => 'normal',
-		'priority'   => 'high',
-		'show_names' => false, // Show field names on the left
-		'fields'     => array(
-			array(
-				'id'      => $prefix . 'assign_jumbotron',
-				'name'    => __( 'Assign Jumbotron' ),
-				'type'    => 'select',
-				'options' => $jumbos_array,
-				'desc'    => __( 'Assign a custom Jumbotron to this post', 'shoestrap' )
-			)
-		),
+	$fields[] = array(
+		'id'      => '_ss_assign_jumbotron',
+		'name'    => __( 'Assign Jumbotron' ),
+		'type'    => 'select',
+		'options' => $jumbos_array,
+		'desc'    => __( 'Assign a custom Jumbotron to this post', 'shoestrap' )
 	);
 
-	return $meta_boxes;
+	return $fields;
 }
-add_filter( 'cmb_meta_boxes', 'ss_jumbotron_metabox' );
+add_filter( 'ssp_metabox_fields', 'ss_jumbotron_metabox' );
 
 /*
  * Checks if a custom Jumbotron is assigned to the current post.

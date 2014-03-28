@@ -25,3 +25,45 @@ function ssp_initialize_cmb_meta_boxes() {
 require_once( plugin_dir_path(__FILE__) . 'includes/jumbotron.php' );
 // Add Custom layouts per post
 require_once( plugin_dir_path(__FILE__) . 'includes/layouts.php' );
+
+/**
+ * Define the metabox and field configurations.
+ *
+ * @param  array $meta_boxes
+ * @return array
+ */
+function ssp_metabox( array $meta_boxes ) {
+
+	// Get an array of the available post types
+	$post_types = get_post_types( array( 'public' => true ), 'objects' );
+
+	$pt_array = array();
+	foreach ( $post_types as $post_type ) {
+		if ( 'ss_layout' != $post_type->name ) {
+			$pt_array[] = $post_type->name;
+		}
+	}
+
+	$meta_boxes[] = array(
+		'id'         => 'ssp_metabox',
+		'title'      => 'Shoestrap Fields',
+		'pages'      => $pt_array,
+		'context'    => 'normal',
+		'priority'   => 'high',
+		'show_names' => true, // Show field names on the left
+		'fields'     => ppj_metabox_fields(),
+	);
+
+	return $meta_boxes;
+}
+add_filter( 'cmb_meta_boxes', 'ssp_metabox' );
+
+/**
+ * Return an array of fields.
+ * Uses the 'ssp_metabox_fields' filter.
+ */
+function ppj_metabox_fields() {
+
+	return apply_filters( 'ssp_metabox_fields', array() );
+
+}
