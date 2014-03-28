@@ -21,7 +21,7 @@ function ss_layout_metabox( $fields ) {
 			4         => __( '2 Right Sidebars', 'shoestrap' ),
 			5         => __( '1 Left & 1 Right Sidebars', 'shoestrap' ),
 		),
-		'desc'    => __( 'Assign a custom Layout to this post', 'shoestrap' )
+		'desc'    => __( 'Assign a custom Layout to this post. Please note that this functionality depends on the active framework. If the default framewor (bootstrap) has been overriden, then this might not work as expected.', 'shoestrap' )
 	);
 
 	return $fields;
