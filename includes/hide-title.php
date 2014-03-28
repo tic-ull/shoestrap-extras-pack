@@ -47,3 +47,4 @@ function ssp_force_hide_title() {
 	}
 }
 add_action( 'wp', 'ssp_force_hide_title' );
+

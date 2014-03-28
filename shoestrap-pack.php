@@ -21,15 +21,19 @@ function ssp_initialize_cmb_meta_boxes() {
 
 }
 
-// Add the Jumbotron Custom post type + fields
-require_once( plugin_dir_path(__FILE__) . 'includes/jumbotron.php' );
-// Add Custom layouts per post
-require_once( plugin_dir_path(__FILE__) . 'includes/layouts.php' );
-// Hide the title.
-require_once( plugin_dir_path(__FILE__) . 'includes/hide-title.php' );
-// Hide meta info per-post
-require_once( plugin_dir_path(__FILE__) . 'includes/hide-meta.php' );
+function ssp_include_files() {
 
+	// Add the Jumbotron Custom post type + fields
+	require_once( plugin_dir_path(__FILE__) . 'includes/jumbotron.php' );
+	// Add Custom layouts per post
+	require_once( plugin_dir_path(__FILE__) . 'includes/layouts.php' );
+	// Hide the title.
+	require_once( plugin_dir_path(__FILE__) . 'includes/hide-title.php' );
+	// Hide meta info per-post
+	require_once( plugin_dir_path(__FILE__) . 'includes/hide-meta.php' );
+
+}
+add_action( 'shoestrap_include_files', 'ssp_include_files' );
 
 /**
  * Define the metabox and field configurations.
