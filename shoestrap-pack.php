@@ -25,6 +25,8 @@ function ssp_initialize_cmb_meta_boxes() {
 require_once( plugin_dir_path(__FILE__) . 'includes/jumbotron.php' );
 // Add Custom layouts per post
 require_once( plugin_dir_path(__FILE__) . 'includes/layouts.php' );
+// Hide the title.
+require_once( plugin_dir_path(__FILE__) . 'includes/hide-title.php' );
 // Hide meta info per-post
 require_once( plugin_dir_path(__FILE__) . 'includes/hide-meta.php' );
 
