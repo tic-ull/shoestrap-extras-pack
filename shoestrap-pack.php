@@ -23,4 +23,4 @@ function ssp_initialize_cmb_meta_boxes() {
 
 
 // Add the Jumbotron Custom post type + fields
-require_once( plugin_dir_path(__FILE__) . 'includes/jumbotron-cpt.php' );
+require_once( plugin_dir_path(__FILE__) . 'includes/jumbotron.php' );
