@@ -25,6 +25,9 @@ function ssp_initialize_cmb_meta_boxes() {
 require_once( plugin_dir_path(__FILE__) . 'includes/jumbotron.php' );
 // Add Custom layouts per post
 require_once( plugin_dir_path(__FILE__) . 'includes/layouts.php' );
+// Hide meta info per-post
+require_once( plugin_dir_path(__FILE__) . 'includes/hide-meta.php' );
+
 
 /**
  * Define the metabox and field configurations.
@@ -39,7 +42,7 @@ function ssp_metabox( array $meta_boxes ) {
 
 	$pt_array = array();
 	foreach ( $post_types as $post_type ) {
-		if ( 'ss_layout' != $post_type->name ) {
+		if ( 'ss_jumbotron' != $post_type->name ) {
 			$pt_array[] = $post_type->name;
 		}
 	}
