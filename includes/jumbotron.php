@@ -72,7 +72,6 @@ function ssp_check_jumbotron( $id ) {
 	return $value;
 }
 
-
 /*
  * Render the jumbotron.
  */
@@ -87,7 +86,7 @@ function ssppj_jumbotron_content() {
 	// Get the assigned Jumbotron
 	$jumbotron_obj = get_post( ssp_check_jumbotron( $post->ID ) );
 	// Get the content of the assigned Jumbotron
-	$content       = apply_filters( 'the_content', $jumbotron_obj->post_content );
+	$content       = apply_filters( 'ssp_jumbotron_the_content', $jumbotron_obj->post_content );
 
 	$site_style   = $ss_settings['site_style'];
 	$nocontainer  = $ss_settings['jumbotron_nocontainer'];
@@ -115,4 +114,5 @@ function ssppj_jumbotron_content() {
 	<?php endif;
 
 }
+add_filter( 'ssp_jumbotron_the_content', 'do_shortcode' );
 add_action( 'shoestrap_pre_main', 'ssppj_jumbotron_content', 10 );
