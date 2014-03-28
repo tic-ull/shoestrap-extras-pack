@@ -44,6 +44,8 @@ function ssp_force_hide_meta() {
 
 	if ( $hide_meta ) {
 		remove_action( 'shoestrap_entry_meta', array( $ss_blog, 'meta_custom_render' ) );
+		add_filter( 'shoestrap_the_tags', '__return_null' );
+		add_filter( 'shoestrap_the_cats', '__return_null' );
 	}
 }
 add_action( 'wp', 'ssp_force_hide_meta' );
