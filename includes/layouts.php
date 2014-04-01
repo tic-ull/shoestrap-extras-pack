@@ -47,10 +47,14 @@ function ssp_check_layout( $id ) {
 /**
  * Force the selected layout
  */
-function ssp_force_layout() {
+function ssp_force_layout( $layout = null ) {
 	global $post, $ss_layout;
 
-	$layout = ssp_check_layout( $post->ID );
+    // If no layout has been specified as an argument,
+    // get the layout from the post meta.
+	if ( is_null( $layout ) ) {
+	    $layout = ssp_check_layout( $post->ID );
+	}
 
 	if ( $layout ) {
 		$ss_layout->set_layout( $layout );
