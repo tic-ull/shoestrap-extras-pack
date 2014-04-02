@@ -1,66 +1,91 @@
 <?php
 
 /**
- * Define the metabox and field configurations.
- *
- * @param  array $meta_boxes
- * @return array
+ * Add themetabox field
  */
-function ss_layout_metabox( $fields ) {
+function ssep_layout_metabox( $fields ) {
 
 	$fields[] = array(
 		'id'      => '_ss_assign_layout',
 		'name'    => __( 'Assign Layout' ),
 		'type'    => 'select',
 		'options' => array(
-			'default' => __( 'Default', 'shoestrap' ),
-			0         => __( 'Full-Width', 'shoestrap' ),
-			1         => __( 'Right Sidebar', 'shoestrap' ),
-			2         => __( 'Left Sidebar', 'shoestrap' ),
-			3         => __( '2 Left Sidebars', 'shoestrap' ),
-			4         => __( '2 Right Sidebars', 'shoestrap' ),
-			5         => __( '1 Left & 1 Right Sidebars', 'shoestrap' ),
+			'd'   => __( 'Default', 'shoestrap' ),
+			'f'   => __( 'Full-Width', 'shoestrap' ),
+			'r'   => __( 'Right Sidebar', 'shoestrap' ),
+			'l'   => __( 'Left Sidebar', 'shoestrap' ),
+			'll'  => __( '2 Left Sidebars', 'shoestrap' ),
+			'rr'  => __( '2 Right Sidebars', 'shoestrap' ),
+			'lr'  => __( '1 Left & 1 Right Sidebars', 'shoestrap' ),
 		),
 		'desc'    => __( 'Assign a custom Layout to this post. Please note that this functionality depends on the active framework. If the default framewor (bootstrap) has been overriden, then this might not work as expected.', 'shoestrap' )
 	);
 
 	return $fields;
 }
-add_filter( 'ssp_metabox_fields', 'ss_layout_metabox' );
-
-/*
- * Checks if a custom layout is assigned to the current post.
- * Returns the layout ID (or false if none).
- */
-function ssp_check_layout( $id ) {
-	$data  = get_post_meta( $id, '_ss_assign_layout', true );
-
-	if ( isset( $data ) && 'default' != $data ) {
-		$value = $data;
-	} else {
-		$value = false;
-	}
-
-	return $value;
-}
+add_filter( 'ssep_metabox_fields', 'ssep_layout_metabox' );
 
 /**
  * Force the selected layout
  */
-function ssp_force_layout() {
+function ssep_force_layout() {
 	global $post, $ss_layout;
 
-	$layout = ssp_check_layout( $post->ID );
+	$layout = apply_filters( 'shoestrap_forced_layout', get_post_meta( $post->ID, '_ss_assign_layout', true ) );
 
-	if ( $layout ) {
-		$ss_layout->set_layout( $layout );
+	// No need to continue if we've selected the default option.
+	if ( 'd' == $layout ) {
+		return;
 	}
 
-	if ( 0 == $layout ) {
+	if ( 'f' == $layout ) { // Full-width
+
+		$ss_layout->set_layout( 0 );
 		add_filter( 'shoestrap_display_primary_sidebar', '__return_false', 999 );
 		add_filter( 'shoestrap_display_secondary_sidebar', '__return_false', 999 );
-	} elseif ( 1 == $layout || 2 == $layout ) {
+
+	} elseif ( 'r'  == $layout ) { // Right Sidebar
+
+		$ss_layout->set_layout( 1 );
+		add_filter( 'shoestrap_display_primary_sidebar', '__return_true', 999 );
 		add_filter( 'shoestrap_display_secondary_sidebar', '__return_false', 999 );
+
+	} elseif ( 'l'  == $layout ) { // Left Sidebar
+
+		$ss_layout->set_layout( 2 );
+		add_filter( 'shoestrap_display_primary_sidebar', '__return_true', 999 );
+		add_filter( 'shoestrap_display_secondary_sidebar', '__return_false', 999 );
+
+	} elseif ( 'll'  == $layout ) { // 2 Left Sidebars
+
+		$ss_layout->set_layout( 3 );
+		add_filter( 'shoestrap_display_primary_sidebar', '__return_true', 999 );
+		add_filter( 'shoestrap_display_secondary_sidebar', '__return_true', 999 );
+
+	} elseif ( 'rr'  == $layout ) { // 2 Right Sidebars
+
+		$ss_layout->set_layout( 4 );
+		add_filter( 'shoestrap_display_primary_sidebar', '__return_true', 999 );
+		add_filter( 'shoestrap_display_secondary_sidebar', '__return_true', 999 );
+
+	} elseif ( 'lr'  == $layout ) { // 1 Left & 1 Right Sidebars
+
+		$ss_layout->set_layout( 5 );
+		add_filter( 'shoestrap_display_primary_sidebar', '__return_true', 999 );
+		add_filter( 'shoestrap_display_secondary_sidebar', '__return_true', 999 );
+
 	}
 }
-add_action( 'wp', 'ssp_force_layout' );
+add_action( 'wp', 'ssep_force_layout' );
+
+function ssep_return_f() { return 'f'; }
+
+function ssep_return_l() { return 'l'; }
+
+function ssep_return_r() { return 'r'; }
+
+function ssep_return_ll() { return 'll'; }
+
+function ssep_return_rr() { return 'rr'; }
+
+function ssep_return_lr() { return 'lr'; }

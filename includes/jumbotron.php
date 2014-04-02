@@ -3,8 +3,7 @@
 /*
  * Create the "Jumbotron" custom post type
  */
-add_action( 'init', 'ss_jumbotron_post_type' );
-function ss_jumbotron_post_type() {
+function ssep_jumbotron_post_type() {
 	register_post_type(
 		'ss_jumbotron',
 		array(
@@ -17,14 +16,12 @@ function ss_jumbotron_post_type() {
 		)
 	);
 }
+add_action( 'init', 'ssep_jumbotron_post_type' );
 
 /**
- * Define the metabox and field configurations.
- *
- * @param  array $meta_boxes
- * @return array
+ * Define the metabox field configuration.
  */
-function ss_jumbotron_metabox( $fields ) {
+function ssep_jumbotron_metabox( $fields ) {
 
 	// Get the list of jumbotron posts.
 	$args = array(
@@ -54,13 +51,13 @@ function ss_jumbotron_metabox( $fields ) {
 
 	return $fields;
 }
-add_filter( 'ssp_metabox_fields', 'ss_jumbotron_metabox' );
+add_filter( 'ssep_metabox_fields', 'ssep_jumbotron_metabox' );
 
 /*
  * Checks if a custom Jumbotron is assigned to the current post.
  * Returns the post ID of the Jumbotron assigned (or false if none).
  */
-function ssp_check_jumbotron( $id ) {
+function ssep_check_jumbotron( $id ) {
 	$data  = get_post_meta( $id, '_ss_assign_jumbotron', true );
 
 	if ( isset( $data ) && 0 != $data ) {
@@ -75,18 +72,18 @@ function ssp_check_jumbotron( $id ) {
 /*
  * Render the jumbotron.
  */
-function ssppj_jumbotron_content() {
+function ssep_jumbotron_content() {
 	global $post, $ss_settings, $ss_framework;
 
 	// Check if a custom Jumbotron content exists
-	if ( ! ssp_check_jumbotron( $post->ID ) ) {
+	if ( ! ssep_check_jumbotron( $post->ID ) ) {
 		return;
 	}
 
 	// Get the assigned Jumbotron
-	$jumbotron_obj = get_post( ssp_check_jumbotron( $post->ID ) );
+	$jumbotron_obj = get_post( ssep_check_jumbotron( $post->ID ) );
 	// Get the content of the assigned Jumbotron
-	$content       = apply_filters( 'ssp_jumbotron_the_content', $jumbotron_obj->post_content );
+	$content       = apply_filters( 'ssep_jumbotron_the_content', $jumbotron_obj->post_content );
 
 	$site_style   = $ss_settings['site_style'];
 	$nocontainer  = $ss_settings['jumbotron_nocontainer'];
@@ -114,5 +111,5 @@ function ssppj_jumbotron_content() {
 	<?php endif;
 
 }
-add_filter( 'ssp_jumbotron_the_content', 'do_shortcode' );
-add_action( 'shoestrap_pre_main', 'ssppj_jumbotron_content', 10 );
+add_filter( 'ssep_jumbotron_the_content', 'do_shortcode' );
+add_action( 'shoestrap_pre_main', 'ssep_jumbotron_content', 10 );

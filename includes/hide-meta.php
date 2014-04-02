@@ -6,7 +6,7 @@
  * @param  array $meta_boxes
  * @return array
  */
-function ss_hide_meta_field( $fields ) {
+function ssep_hide_meta_field( $fields ) {
 
 	$fields[] = array(
 		'id'      => '_ss_hide_meta',
@@ -17,12 +17,12 @@ function ss_hide_meta_field( $fields ) {
 
 	return $fields;
 }
-add_filter( 'ssp_metabox_fields', 'ss_hide_meta_field' );
+add_filter( 'ssp_metabox_fields', 'ssep_hide_meta_field' );
 
 /*
  * Checks if we've selected to hide the post meta
  */
-function ssp_hide_meta( $id ) {
+function ssep_hide_meta( $id ) {
 	$data  = get_post_meta( $id, '_ss_hide_meta', true );
 
 	if ( isset( $data ) && ( 1 == $data || 'on' == $data ) ) {
@@ -40,7 +40,7 @@ function ssp_hide_meta( $id ) {
 function ssp_force_hide_meta() {
 	global $post, $ss_blog;
 
-	$hide_meta = ssp_hide_meta( $post->ID );
+	$hide_meta = ssep_hide_meta( $post->ID );
 
 	if ( $hide_meta ) {
 		remove_action( 'shoestrap_entry_meta', array( $ss_blog, 'meta_custom_render' ) );
