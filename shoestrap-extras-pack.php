@@ -17,6 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Define the main file path
 define ( 'SSEP_FILE_FATH', __FILE__ );
 
+// Define the plugin version
+define ( 'SSEP_PLUGIN_VER', '0.5' );
+
+// Include the updater
+require_once( plugin_dir_path(__FILE__) . 'includes/updater/updater.php' );
+
 /**
 * 
 */
