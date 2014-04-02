@@ -4,7 +4,7 @@
 Plugin Name: Shoestrap Extras Pack
 Plugin URI: http://wpmu.io
 Description: Shoestrap Customizations and additions
-Version: 0.4
+Version: 0.5
 Author: Aristeides Stathopoulos
 Author URI:  http://aristeides.com
 */
@@ -51,14 +51,14 @@ class Shoestrap_Extras_Pack {
 			'desc'     => '',
 
 			'options'  => array(
-				'hide_meta'  => __( 'Hide meta per post', 'shoestrap' ),
-				'hide_title' => __( 'Hide titles per post', 'shoestrap' ),
+				'hidemeta'   => __( 'Hide meta per post', 'shoestrap' ),
+				'hidetitle'  => __( 'Hide titles per post', 'shoestrap' ),
 				'jumbotrons' => __( 'Jombotron post type + assign per post', 'shoestrap' ),
 				'layouts'    => __( 'Per-Post Layouts', 'shoestrap' ),
 			),
 			'default' => array(
-				'hide_meta'  => '0',
-				'hide_title' => '0',
+				'hidemeta'   => '0',
+				'hidetitle'  => '0',
 				'jumbotrons' => '0',
 				'layouts'    => '0'
 			)
@@ -79,12 +79,12 @@ class Shoestrap_Extras_Pack {
 
 		$ssep_active_modules = $ss_settings['ssep_active_modules'];
 
-		if ( isset( $ssep_active_modules['hide_meta'] ) && '1' == $ssep_active_modules['hide_meta'] ) {
+		if ( isset( $ssep_active_modules['hidemeta'] ) && '1' == $ssep_active_modules['hidemeta'] ) {
 			// Hide meta info per-post
 			require_once( plugin_dir_path(__FILE__) . 'includes/hide-meta.php' );
 		}
 
-		if ( isset( $ssep_active_modules['hide_title'] ) && '1' == $ssep_active_modules['hide_title'] ) {
+		if ( isset( $ssep_active_modules['hidetitle'] ) && '1' == $ssep_active_modules['hidetitle'] ) {
 			// Hide the title.
 			require_once( plugin_dir_path(__FILE__) . 'includes/hide-title.php' );
 		}

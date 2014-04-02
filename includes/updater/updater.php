@@ -9,7 +9,7 @@ function ssp_plugin_updater() {
 
 	// setup the updater
 	$edd_updater = new EDD_SL_Plugin_Updater( 'http://shoestrap.org', SSEP_FILE_FATH, array( 
-			'version'   => '0.4',
+			'version'   => '0.5',
 			'license'   => '33d741209efc16e45237d3840800f958',
 			'item_name' => 'Shoestrap Extras Pack',
 			'author'    => 'aristath'

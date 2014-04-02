@@ -17,7 +17,7 @@ function ssep_hide_meta_field( $fields ) {
 
 	return $fields;
 }
-add_filter( 'ssp_metabox_fields', 'ssep_hide_meta_field' );
+add_filter( 'ssep_metabox_fields', 'ssep_hide_meta_field' );
 
 /*
  * Checks if we've selected to hide the post meta
@@ -37,7 +37,7 @@ function ssep_hide_meta( $id ) {
 /**
  * Force-hide the post meta for this post.
  */
-function ssp_force_hide_meta() {
+function ssep_force_hide_meta() {
 	global $post, $ss_blog;
 
 	$hide_meta = ssep_hide_meta( $post->ID );
@@ -48,4 +48,4 @@ function ssp_force_hide_meta() {
 		add_filter( 'shoestrap_the_cats', '__return_null' );
 	}
 }
-add_action( 'wp', 'ssp_force_hide_meta' );
+add_action( 'wp', 'ssep_force_hide_meta' );

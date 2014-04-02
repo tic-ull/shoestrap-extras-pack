@@ -17,7 +17,7 @@ function ssep_hide_title_field( $fields ) {
 
 	return $fields;
 }
-add_filter( 'ssp_metabox_fields', 'ssep_hide_title_field' );
+add_filter( 'ssep_metabox_fields', 'ssep_hide_title_field' );
 
 /*
  * Checks if we've selected to hide the post title
@@ -37,7 +37,7 @@ function ssep_hide_title( $id ) {
 /**
  * Force-hide the post title for this post.
  */
-function ssp_force_hide_title() {
+function ssep_force_hide_title() {
 	global $post, $ss_blog;
 
 	$hide_title = ssep_hide_title( $post->ID );
@@ -46,5 +46,5 @@ function ssp_force_hide_title() {
 		add_filter( 'shoestrap_title_section', '__return_null' );
 	}
 }
-add_action( 'wp', 'ssp_force_hide_title' );
+add_action( 'wp', 'ssep_force_hide_title' );
 
