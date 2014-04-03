@@ -4,7 +4,7 @@
 Plugin Name: Shoestrap Extras Pack
 Plugin URI: http://wpmu.io
 Description: Shoestrap Customizations and additions
-Version: 0.5
+Version: 0.6
 Author: Aristeides Stathopoulos
 Author URI:  http://aristeides.com
 */
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define ( 'SSEP_FILE_FATH', __FILE__ );
 
 // Define the plugin version
-define ( 'SSEP_PLUGIN_VER', '0.5' );
+define ( 'SSEP_PLUGIN_VER', '0.6' );
 
 // Include the updater
 require_once( plugin_dir_path(__FILE__) . 'includes/updater/updater.php' );
