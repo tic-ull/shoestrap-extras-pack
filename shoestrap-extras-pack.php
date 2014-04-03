@@ -59,15 +59,26 @@ class Shoestrap_Extras_Pack {
 			'options'  => array(
 				'hidemeta'   => __( 'Hide meta per post', 'shoestrap' ),
 				'hidetitle'  => __( 'Hide titles per post', 'shoestrap' ),
-				'jumbotrons' => __( 'Jombotron post type + assign per post', 'shoestrap' ),
+				'jumbotrons' => __( 'Jombotron post type + per post assignments', 'shoestrap' ),
 				'layouts'    => __( 'Per-Post Layouts', 'shoestrap' ),
+				'featured'   => __( 'Featured Content Section', 'shoestrap' )
 			),
 			'default' => array(
 				'hidemeta'   => '0',
 				'hidetitle'  => '0',
 				'jumbotrons' => '0',
-				'layouts'    => '0'
+				'layouts'    => '0',
+				'featured'   => '0'
 			)
+		);
+
+		$fields[] = array(
+			'id'       => 'ssep_help',
+			'type'     => 'info',
+			'title'    => '',
+			'subtitle' => '',
+			'desc'     => __( 'The featured content section displays your "sticky" posts in the jumbotron.
+				On first activation you will have to manually trigger the compiler (by changing for example the Jumbotron Background Color setting).', 'shoestrap' )
 		);
 
 		$section['fields'] = $fields;
@@ -105,6 +116,14 @@ class Shoestrap_Extras_Pack {
 			require_once( plugin_dir_path(__FILE__) . 'includes/layouts.php' );
 		}
 
+		if ( isset( $ssep_active_modules['featured'] ) && '1' == $ssep_active_modules['featured'] ) {
+			// Add Featured Content files
+			if ( ! class_exists( 'Featured_Content' ) && 'plugins.php' !== $GLOBALS['pagenow'] ) {
+				require_once( plugin_dir_path(__FILE__) . 'includes/class-Featured_Content.php' );
+			}
+
+			require_once( plugin_dir_path(__FILE__) . 'includes/featured.php' );
+		}
 	}
 
 	/**
