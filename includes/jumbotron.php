@@ -84,6 +84,8 @@ function ssep_jumbotron_content() {
 	$jumbotron_obj = get_post( ssep_check_jumbotron( $post->ID ) );
 	// Get the content of the assigned Jumbotron
 	$content       = apply_filters( 'ssep_jumbotron_the_content', $jumbotron_obj->post_content );
+	// Get the title of the assigned Jumbotron
+	$title         = get_the_title( $jumbotron_obj );
 
 	$site_style   = $ss_settings['site_style'];
 	$nocontainer  = $ss_settings['jumbotron_nocontainer'];
@@ -94,7 +96,7 @@ function ssep_jumbotron_content() {
 		<?php echo $ss_framework->open_container( 'div' ); ?>
 	<?php endif; ?>
 
-		<div class="jumbotron">
+		<div class="jumbotron <?php echo $title; ?>">
 			<?php if ( $nocontainer != 1 && $site_style == 'wide' || $site_style == 'boxed' ) : ?>
 				<?php echo $ss_framework->open_container( 'div' ); ?>
 			<?php endif; ?>
