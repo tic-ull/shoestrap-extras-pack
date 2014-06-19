@@ -96,7 +96,7 @@ function ssep_jumbotron_content() {
 		<?php echo $ss_framework->open_container( 'div' ); ?>
 	<?php endif; ?>
 
-		<div class="jumbotron <?php echo $title; ?>">
+		<div class="jumbotron <?php echo str_replace(' ', '-', $title); ?>">
 			<?php if ( $nocontainer != 1 && $site_style == 'wide' || $site_style == 'boxed' ) : ?>
 				<?php echo $ss_framework->open_container( 'div' ); ?>
 			<?php endif; ?>
