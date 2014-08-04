@@ -5,52 +5,225 @@ if( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 	include( dirname( __FILE__ ) . '/EDD_SL_Plugin_Updater.php' );
 }
 
-function ssp_plugin_updater() {
+function shoestrap_extras_pack_plugin_updater() {
+
+	// retrieve our license key from the DB
+	$license_key = trim( get_option( 'shoestrap_extras_pack_license_key' ) );
 
 	// setup the updater
-	$edd_updater = new EDD_SL_Plugin_Updater( 'http://shoestrap.org', SSEP_FILE_FATH, array( 
-			'version'   => SSEP_PLUGIN_VER,
-			'license'   => '33d741209efc16e45237d3840800f958',
-			'item_name' => 'Shoestrap Extras Pack',
-			'author'    => 'aristath'
-		)
-	);
+	$edd_updater = new EDD_SL_Plugin_Updater( 'http://shoestrap.org', SSEP_FILE_FATH, array(
+		'version'   => '0.7',
+		'license'   => $license_key,
+		'item_name' => 'Shoestrap Extras Pack',
+		'author'    => 'aristath, fovoc'
+	) );
 
 }
-add_action( 'admin_init', 'ssp_plugin_updater' );
+add_action( 'admin_init', 'shoestrap_extras_pack_plugin_updater' );
 
-
-function ssp_plugin_updater_activate_license() {
-
-	// Do not continue processing if the license is already active.
-	if ( 'valid' == get_transient( 'ssp_license_status' ) ) {
-		return;
+/**
+ * Add page to menu under "Settings"
+ */
+if ( ! function_exists( 'ss_updater_add_menus' ) ) {
+	function ss_updater_add_menus() {
+		add_theme_page( 'Shoestrap Extensions & Addons', 'Shoestrap Extensions', 'manage_options', 'ss-updater', 'ss_updater_settings_page' );
 	}
 
-	// data to send in our API request
-	$api_params = array( 
-		'edd_action' => 'activate_license', 
-		'license'    => '33d741209efc16e45237d3840800f958', 
-		'item_name'  => urlencode( 'Shoestrap Extras Pack' )
-	);
-		
-	// Call the custom API.
-	$response = wp_remote_get( add_query_arg( $api_params, 'http://shoestrap.org' ), array( 'timeout' => 15, 'sslverify' => false ) );
+	add_action( 'admin_menu', 'ss_updater_add_menus' );
+}
 
-	// make sure the response came back okay
-	if ( is_wp_error( $response ) ) {
-		return false;
-	}
+/**
+ * Build our Options page
+ */
+if ( ! function_exists( 'ss_updater_settings_page' ) ) {
+	function ss_updater_settings_page() {
 
-	// decode the license data
-	$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+		echo '<div class="wrap">';
 
-	if ( 'valid' == $license_data->license ) {
-		// If the license is valid, cache th response for 3 days
-		set_transient( 'ssp_license_status', $license_data->license, 72 * 60 * 60 );
-	} else {
-		// If the license is NOT valid, cache the response for 3 hours.
-		set_transient( 'ssp_license_status', $license_data->license, 3 * 60 * 60 );
+			echo '<h2>' . __( 'Shoestrap Licensing' ) . '</h2><hr><br>';
+
+			// If there are no products that need licensing, display a message
+			if ( ! has_action( 'shoestrap_updater_form_content' ) ) {
+				_e( 'No products require a license key.' );
+			}
+
+			?>
+			<style>tr td.plugin-title { border-left: 3px solid #faebcc; } tr.valid td.plugin-title { border-left: 3px solid #3c763d; } tr.invalid. td.plugin-title { border-left: 3px solid #a94442; } input.button-activate { border: none; background: none; color: #31708f; padding: 0; } input.button-deactivate { border: none; background: none; color: #a94442; padding: 0; } tr td { border-bottom: 1px solid rgb(229, 229, 229); } tr.valid { background: #dff0d8; } tr.invalid { background: #f2dede; }</style>
+
+			<table class="wp-list-table widefat plugins">
+				<thead>
+					<tr>
+						<th scope="col" id="name" class="manage-column column-name" style="">Product name</th>
+						<th scope="col" id="license" class="manage-column column-license" style="">License</th>
+						<th scope="col" id="save" class="manage-column column-save" style=""></th>
+					</tr>
+				</thead>
+				<tbody id="the-list">
+					<?php
+						// Include our custom licensing fields for all our plugins & themes.
+						do_action( 'shoestrap_updater_form_content' );
+					?>
+				</tbody>
+			</table>
+
+			<?php
+
+			// Display the addons section.
+			do_action( 'shoestrap_installer_form_content' );
+
+		echo '</div>';
 	}
 }
-add_action('admin_init', 'ssp_plugin_updater_activate_license');
+
+/*
+ * The license form that is added in the admin page.
+ */
+if ( ! function_exists( 'shoestrap_extras_pack_license_form' ) ) {
+	function shoestrap_extras_pack_license_form() {
+		$field_name = 'shoestrap_extras_pack_license';
+
+		$license 	= get_option( 'shoestrap_extras_pack_license_key' );
+		$status 	= get_option( 'shoestrap_extras_pack_license_key_status' );
+		?>
+
+		<tr id="shoestrap-extras_pack" class="<?php echo $status; ?>">
+			<form method="post" action="options.php">
+				<?php settings_fields( 'shoestrap_extras_pack_license' ); ?>
+				<td class="plugin-title">
+					<strong><?php _e( 'Shoestrap Extras Pack', 'shoestrap_extras_pack' ); ?></strong>
+					<div class="row-actions visible">
+						<?php wp_nonce_field( 'shoestrap_extras_pack_nonce', 'shoestrap_extras_pack_nonce' ); ?>
+
+						<?php if ( false !== $license ) : ?>
+							<?php if ( $status !== false && $status == 'valid' ) : ?>
+								<input type="submit" class="button-deactivate" name="shoestrap_extras_pack_license_deactivate" value="<?php _e( 'Deactivate License', 'shoestrap_extras_pack' ); ?>"/>
+							<?php else : ?>
+								<input type="submit" class="button-activate" name="shoestrap_extras_pack_license_activate" value="<?php _e( 'Activate License', 'shoestrap_extras_pack' ); ?>"/>
+							<?php endif; ?>
+						<?php endif; ?>
+					</div>
+				</td>
+
+				<td>
+					<input id="shoestrap_extras_pack_license_key" name="shoestrap_extras_pack_license_key" type="text" class="regular-text" value="<?php echo esc_attr( $license ); ?>" />
+				</td>
+
+				<td>
+					<?php submit_button(); ?>
+				</td>
+			</form>
+		</tr>
+		<?php
+	}
+}
+add_action( 'shoestrap_updater_form_content', 'shoestrap_extras_pack_license_form' );
+
+/**
+ * Register the option
+ */
+if ( ! function_exists( 'shoestrap_extras_pack_licensing_register_option' ) ) {
+	function shoestrap_extras_pack_licensing_register_option() {
+		// creates our settings in the options table
+		register_setting( 'shoestrap_extras_pack_license', 'shoestrap_extras_pack_license_key', 'shoestrap_extras_pack_license_sanitize' );
+	}
+	add_action('admin_init', 'shoestrap_extras_pack_licensing_register_option');
+}
+
+/*
+ * Gets rid of the local license status option when adding a new one
+ */
+if ( ! function_exists( 'shoestrap_extras_pack_license_sanitize' ) ) {
+	function shoestrap_extras_pack_license_sanitize( $new ) {
+		$old = get_option( 'shoestrap_extras_pack_license_key' );
+		if( $old && $old != $new ) {
+			delete_option( 'shoestrap_extras_pack_license_key_status' ); // new license has been entered, so must reactivate
+		}
+		return $new;
+	}
+}
+
+/*
+ * Activate the license
+ */
+function shoestrap_extras_pack_activate_license() {
+
+	// listen for our activate button to be clicked
+	if( isset( $_POST['shoestrap_extras_pack_license_activate'] ) ) {
+
+		// run a quick security check
+		if ( ! check_admin_referer( 'shoestrap_extras_pack_nonce', 'shoestrap_extras_pack_nonce' ) ) {
+			return; // get out if we didn't click the Activate button
+		}
+
+		// retrieve the license from the database
+		$license = trim( get_option( 'shoestrap_extras_pack_license_key' ) );
+
+		// data to send in our API request
+		$api_params = array(
+			'edd_action' => 'activate_license',
+			'license'    => $license,
+	 		'item_name'  => urlencode( 'Shoestrap Extras Pack' ),
+	 		'url'        => home_url()
+	 	);
+
+		// Call the custom API.
+		$response = wp_remote_get( add_query_arg( $api_params, 'http://shoestrap.org' ), array( 'timeout' => 15, 'sslverify' => false ) );
+
+		// make sure the response came back okay
+		if ( is_wp_error( $response ) ) {
+			return false;
+		}
+
+		// decode the license data
+		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		update_option( 'shoestrap_extras_pack_license_key_status', $license_data->license );
+
+	}
+
+}
+add_action( 'admin_init', 'shoestrap_extras_pack_activate_license' );
+
+/*
+ * De-activate the license
+ */
+function shoestrap_extras_pack_deactivate_license() {
+
+	// listen for our activate button to be clicked
+	if( isset( $_POST['shoestrap_extras_pack_license_deactivate'] ) ) {
+
+		// run a quick security check 
+	 	if ( ! check_admin_referer( 'shoestrap_extras_pack_nonce', 'shoestrap_extras_pack_nonce' ) ) {
+	 		return; // get out if we didn't click the Activate button
+	 	}
+
+	 	// retrieve the license from the database
+	 	$license = trim( get_option( 'shoestrap_extras_pack_license_key' ) );
+
+	 	// data to send in our API request
+	 	$api_params = array(
+	 		'edd_action' => 'deactivate_license',
+	 		'license'    => $license,
+	 		'item_name'  => urlencode( 'Shoestrap Extras Pack' ),
+	 		'url'        => home_url()
+	 	);
+
+	 	// Call the custom API.
+	 	$response = wp_remote_get( add_query_arg( $api_params, 'http://shoestrap.org' ), array( 'timeout' => 15, 'sslverify' => false ) );
+
+	 	// make sure the response came back okay
+	 	if ( is_wp_error( $response ) ) {
+	 		return false;
+	 	}
+
+	 	// decode the license data
+	 	$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+	 	if ( $license_data->license == 'deactivated' ) {
+	 		delete_option( 'shoestrap_extras_pack_license_key_status' );
+	 	}
+
+	 }
+
+}
+add_action('admin_init', 'shoestrap_extras_pack_deactivate_license');
