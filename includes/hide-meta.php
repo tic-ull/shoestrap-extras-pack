@@ -40,6 +40,8 @@ function ssep_hide_meta( $id ) {
 function ssep_force_hide_meta() {
 	global $post, $ss_blog;
 
+	if ( ! isset($post) ) return;
+
 	$hide_meta = ssep_hide_meta( $post->ID );
 
 	if ( $hide_meta ) {

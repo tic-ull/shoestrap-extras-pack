@@ -40,6 +40,8 @@ function ssep_hide_title( $id ) {
 function ssep_force_hide_title() {
 	global $post, $ss_blog;
 
+	if ( ! isset($post) ) return;
+
 	$hide_title = ssep_hide_title( $post->ID );
 
 	if ( $hide_title ) {
