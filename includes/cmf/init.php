@@ -887,18 +887,20 @@ class cmb_Meta_Box {
 	public static function get_meta_box_url() {
 
 		if ( strtoupper( substr( PHP_OS, 0, 3 ) ) === 'WIN' ) {
-			// Windows
-			$content_dir = str_replace( '/', DIRECTORY_SEPARATOR, WP_CONTENT_DIR );
+ 			// Windows
+ 			$content_dir = str_replace( '/', DIRECTORY_SEPARATOR, WP_CONTENT_DIR );
 			$content_url = str_replace( $content_dir, WP_CONTENT_URL, dirname(__FILE__) );
-			$cmb_url = str_replace( DIRECTORY_SEPARATOR, '/', $content_url );
-
-		} else {
-		  $cmb_url = str_replace(
-				array(WP_CONTENT_DIR, WP_PLUGIN_DIR),
+			$content_url = str_replace( $content_dir, content_url(), dirname(__FILE__) );
+ 			$cmb_url = str_replace( DIRECTORY_SEPARATOR, '/', $content_url );
+ 
+ 		} else {
+ 		  $cmb_url = str_replace(
+ 				array(WP_CONTENT_DIR, WP_PLUGIN_DIR),
 				array(WP_CONTENT_URL, WP_PLUGIN_URL),
-				dirname( __FILE__ )
-			);
-		}
+				array( content_url() , plugins_url() ),
+ 				dirname( __FILE__ )
+ 			);
+ 		}
 
 		return trailingslashit( apply_filters('cmb_meta_box_url', $cmb_url ) );
 	}
